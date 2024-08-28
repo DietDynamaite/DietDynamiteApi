@@ -1,8 +1,10 @@
 from flask import Flask
 from flask import request
 from framework.crawler.kakaoMapImagesCrawler import *
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)   #CORS 오류 처리
 
 #TEST
 # http://192.168.10.16:7000/api/crawling/kakaoImage?mapId=26307587
