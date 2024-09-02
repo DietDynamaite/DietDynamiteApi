@@ -1,0 +1,1 @@
+celery worker --app=celery_config.entry_point --pool=gevent --concurrency=10 --loglevel=INFO
