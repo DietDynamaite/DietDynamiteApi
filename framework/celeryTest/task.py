@@ -1,19 +1,17 @@
-from celery import Celery
+from celery_config.entry_point import celery_app
 from time import sleep
 import logging
-logger = logging.getLogger(__name__)
+import requests
 
-app = Celery('tasks', 
-            broker='amqp://diet:diet@localhost:5672//',
-            backend='redis://localhost:6379/0') #get 을 사용하기 위해 필요
-            # (결과 저장하지 않으므로 backend 없이 get 사용불가)
 
-@app.task
-def test2(text):
-    sleep(3)
-    print("hello", text)
-    # reqeuest module import 시 에러가 발생하는에 (TLS 오류) 이유를 찾아야한다.
-    logger.info("heeeeeeeelllllllooo")
 
-    return "hello", text
-
+@celery_app.task(name="framework.celeryTest.task", queue='celery_testing_q', routing_key='default')
+def test2(placeImg):
+    BASE_URL = "http://localhost/rest/map"
+    placeId = "aa"
+    url = f"{BASE_URL}/test?placeId={placeId}&placeImg={placeImg}"
+    
+    requests.get(url)
+    print(url)
+    
+    return url
