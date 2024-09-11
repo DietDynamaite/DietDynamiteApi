@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOption
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from webdriver_manager.chrome import ChromeDriverManager
 from celery_config.entry_point import celery_app
 import json
@@ -40,10 +41,30 @@ def staticKakaoImageCrawling(mapId):
 @celery_app.task(name="framework.crawler.kakaoMapImagesCrawler", queue='image_crawling_q', routing_key='default')
 def dynamicKakaoImageCrawling(mapId):
     url = f"{IMAGE_BASE_URL}/{mapId}"
-        
+    
+    # 페이지 로드 전략 None
+    caps = DesiredCapabilities.CHROME
+    caps["pageLoadStrategy"] = "none"
+            
     # 크롬 드라이버 생성
     chrome_options = ChromeOption()
     chrome_options.add_argument("--headless")
+    chrome_options.add_argument('--headless') 
+    chrome_options.add_argument('--ignore-ssl-errors=yes')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--log-level=3')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--incognito')
+
+    # Add Image Loading inactive Flag to reduce loading time
+    chrome_options.add_argument('--disable-images')
+    chrome_options.add_experimental_option(
+        "prefs", {'profile.managed_default_content_settings.images': 2})
+    chrome_options.add_argument('--blink-settings=imagesEnabled=false')
+    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.200'
+    chrome_options.add_argument(f'user-agent={user_agent}')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
     
     # 페이지 접속
