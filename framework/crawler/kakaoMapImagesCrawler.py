@@ -69,7 +69,7 @@ def dynamicKakaoImageCrawling(mapId):
         }
         requestUrl = f"{SPRING_API_URL}/place/saveImage"
         headers = {'Content-Type':'application/json; charset=utf-8'}
-        requests.post(url=requestUrl, data=requestData, headers=headers)
+        requests.post(url=requestUrl, data=requestData, headers=headers, verify=False)
         return
     
     # 이미지데이터 없을경우 placeImg 에 "0" 입력후 Spring 에 요청 전송
