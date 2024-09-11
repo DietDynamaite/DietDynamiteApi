@@ -31,7 +31,10 @@ def kakoImageCrawler () :
         mapId = request.args.get("mapId") #쿼리스트링
         dynamicKakaoImageCrawling.delay(mapId)
     
-    return "성공"
+    result = {
+        "response" : "전달완료"
+    }
+    return result
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=7000)

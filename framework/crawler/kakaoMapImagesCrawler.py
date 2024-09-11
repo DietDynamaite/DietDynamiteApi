@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOption
 from webdriver_manager.chrome import ChromeDriverManager
 from celery_config.entry_point import celery_app
+import json
 import requests
 import time
 
@@ -69,11 +70,18 @@ def dynamicKakaoImageCrawling(mapId):
         }
         requestUrl = f"{SPRING_API_URL}/place/saveImage"
         headers = {'Content-Type':'application/json; charset=utf-8'}
-        requests.post(url=requestUrl, data=requestData, headers=headers, verify=False)
+        requests.post(url=requestUrl, data=json.dumps(requestData), headers=headers)
         return
     
     # 이미지데이터 없을경우 placeImg 에 "0" 입력후 Spring 에 요청 전송
-    requestUrl = f"{SPRING_API_URL}?placeId={mapId}&placeImg=0"
+    else :
+        requestData = {
+            "placeAPIid" : mapId,
+            "placeImg" : 0
+        }
+        requestUrl = f"{SPRING_API_URL}/place/saveImage"
+        headers = {'Content-Type':'application/json; charset=utf-8'}
+        requests.post(url=requestUrl, data=json.dumps(requestData), headers=headers)
 
 
 ### 동적 이미지 크롤링 (일회성 클라이언트에게 이미지 크롤링 용도)
