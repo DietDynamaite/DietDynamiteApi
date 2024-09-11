@@ -8,7 +8,7 @@ import requests
 import time
 
 IMAGE_BASE_URL = "https://place.map.kakao.com/m"
-SPRING_API_URL = "http://localhost/rest/map/test"
+SPRING_API_URL = "http://localhost/rest/map"
 
 ### 정적 이미지 크롤링
 # 페이지 생성후 이미지가 비동기 출력되어 나오지않음
@@ -63,8 +63,13 @@ def dynamicKakaoImageCrawling(mapId):
         imageSrc = imageStyle[start:end]
         
         # 이미지데이터 있을경우 placeImg 에 ImageSrc 를 가지고 Spring 에 요청 전송
-        requestUrl = f"{SPRING_API_URL}?placeId={mapId}&placeImg={imageSrc}"
-        requests.get(requestUrl)
+        requestData = {
+            "placeAPIid" : mapId,
+            "placeImg" : imageSrc
+        }
+        requestUrl = f"{SPRING_API_URL}/place/saveImage"
+        headers = {'Content-Type':'application/json; charset=utf-8'}
+        requests.post(url=requestUrl, data=requestData, headers=headers)
         return
     
     # 이미지데이터 없을경우 placeImg 에 "0" 입력후 Spring 에 요청 전송
