@@ -125,7 +125,7 @@ def dynamicKakaoImageCrawling(mapId, mapName):
             "placeImg" : imageSrc,
             "placeName" : mapName
         }
-        requestUrl = f"{SPRING_API_URL}/place/saveImage"
+        requestUrl = f"{SPRING_API_URL}/places/updateImage"
         headers = {'Content-Type':'application/json; charset=utf-8'}
         requests.post(url=requestUrl, data=json.dumps(requestData), headers=headers)
         return
@@ -137,6 +137,6 @@ def dynamicKakaoImageCrawling(mapId, mapName):
             "placeImg" : 0,
             "placeName" : mapName
         }
-        requestUrl = f"{SPRING_API_URL}/place/saveImage"
+        requestUrl = f"{SPRING_API_URL}/places/updateImage"
         headers = {'Content-Type':'application/json; charset=utf-8'}
         requests.post(url=requestUrl, data=json.dumps(requestData), headers=headers)
